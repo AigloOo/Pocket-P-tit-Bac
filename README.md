@@ -1,5 +1,3 @@
-
-
 # Pocket-P-tit-Bac
 
 [![License](https://img.shields.io/github/license/AigloOo/Pocket-P-tit-Bac)](LICENSE)
@@ -16,7 +14,7 @@ Application mobile du jeu classique du Petit Bac, développée avec **React Nati
 
 ## À propos
 
-**Pocket-P-tit-Bac** réinvente le jeu du Petit Bac en mode multijoueur pour offrir une expérience ludique, conviviale et moderne. Conçu avec des technologies actuelles, il promet des parties rapides et pleines de surprises !
+**Pocket-P-tit-Bac** réinvente le jeu du Petit Bac en mode multijoueur pour offrir une expérience ludique, conviviale et moderne. Conçu avec des technologies actuelles, il promet des parties rapides et amusantes.
 
 ## Fonctionnalités
 
@@ -53,4 +51,5 @@ Ce projet est sous licence [Apache-2.0](LICENSE).
 
 ---
 
- - Jouez, partagez et évoluez ensemble !
+- Jouez, partagez et évoluez ensemble !
+
