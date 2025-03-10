@@ -11,6 +11,7 @@
 [![Contributors](https://img.shields.io/github/contributors/AigloOo/Pocket-P-tit-Bac)](https://github.com/AigloOo/Pocket-P-tit-Bac/graphs/contributors)
 [![Pull Requests](https://img.shields.io/github/issues-pr/AigloOo/Pocket-P-tit-Bac)](https://github.com/AigloOo/Pocket-P-tit-Bac/pulls)
 [![Repo Size](https://img.shields.io/github/repo-size/AigloOo/Pocket-P-tit-Bac)](https://github.com/AigloOo/Pocket-P-tit-Bac)
+<img alt="GitHub Activity" src="https://activity-graph.herokuapp.com/graph?username=AigloOo&amp;theme=github&amp;hide_border=true&amp;bg_color=0D1117&amp;line=58A6FF&amp;point=1F6FEB&amp;color=C3D1D9">
 
 Application mobile du jeu classique du Petit Bac, développée avec **React Native** et **NodeJS**. Permet de jouer en multijoueur.
 
