@@ -39,6 +39,21 @@ export default function CreateSessionScreen() {
   const [maxPlayers, setMaxPlayers] = useState("4");
   const [gameCode, setGameCode] = useState(generateRandomCode(6));
   const [isCodeRefreshed, setIsCodeRefreshed] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState("fr");
+  const languages = [
+    { code: "fr", label: "Français" },
+    { code: "en", label: "English" },
+    { code: "es", label: "Español" },
+  ];
+  const [categories, setCategories] = useState([
+    "Prénom",
+    "Ville",
+    "Pays",
+    "Animal",
+    "Objet",
+    "Couleur",
+  ]);
+  const [newCategory, setNewCategory] = useState("");
 
   const backButtonScale = useSharedValue(1);
   const createButtonScale = useSharedValue(1);
@@ -215,13 +230,11 @@ export default function CreateSessionScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      {/* Background Gradient */}
       <LinearGradient
         colors={[gradientStart, gradientEnd]}
         style={styles.gradient}
       />
 
-      {/* Decorative Elements */}
       <Animated.View
         entering={FadeIn.delay(300).duration(1200)}
         style={[decorativeStyles.circle, decorativeStyles.circle1]}
@@ -235,7 +248,6 @@ export default function CreateSessionScreen() {
         style={[decorativeStyles.circle, decorativeStyles.circle3]}
       />
 
-      {/* Back Button */}
       <Animated.View style={backButtonAnimatedStyle}>
         <TouchableOpacity
           style={styles.backButton}
@@ -261,7 +273,6 @@ export default function CreateSessionScreen() {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        {/* Page Title with Floating Icon */}
         <Animated.View
           entering={FadeInUp.duration(800).delay(200)}
           style={styles.header}
@@ -288,7 +299,6 @@ export default function CreateSessionScreen() {
           </ThemedText>
         </Animated.View>
 
-        {/* Session Settings Card */}
         <Animated.View
           entering={FadeInUp.duration(800).delay(400)}
           style={styles.cardWrapper}
@@ -299,7 +309,6 @@ export default function CreateSessionScreen() {
               { backgroundColor: cardBackground, borderColor },
             ]}
           >
-            {/* Privacy Setting */}
             <View style={styles.settingRow}>
               <View style={styles.settingInfo}>
                 <View style={styles.iconWrapper}>
@@ -321,7 +330,6 @@ export default function CreateSessionScreen() {
               />
             </View>
 
-            {/* Password Input (conditionally displayed) */}
             {isPrivate && (
               <Animated.View
                 entering={FadeIn.duration(500)}
@@ -351,7 +359,6 @@ export default function CreateSessionScreen() {
 
             <View style={styles.divider} />
 
-            {/* Max Players Slider */}
             <View style={styles.settingContainer}>
               <View style={styles.labelWithIcon}>
                 <IconSymbol
@@ -365,7 +372,7 @@ export default function CreateSessionScreen() {
               </View>
               <Animated.View style={playerButtonsAnimatedStyle}>
                 <View style={styles.playerCountContainer}>
-                  {[2, 3, 4, 5, 6].map((num) => (
+                  {[2, 5, 10, 20, 50, 100].map((num) => (
                     <TouchableOpacity
                       key={num}
                       style={[
@@ -386,9 +393,7 @@ export default function CreateSessionScreen() {
                       <ThemedText
                         style={[
                           styles.playerCountText,
-                          maxPlayers === num.toString()
-                            ? { color: "#fff" }
-                            : {},
+                          maxPlayers === num.toString() ? { color: "#fff" } : {},
                         ]}
                       >
                         {num}
@@ -401,7 +406,6 @@ export default function CreateSessionScreen() {
 
             <View style={styles.divider} />
 
-            {/* Game Code Display */}
             <View style={styles.settingContainer}>
               <View style={styles.labelWithIcon}>
                 <IconSymbol
@@ -454,10 +458,106 @@ export default function CreateSessionScreen() {
                 Les joueurs pourront rejoindre avec ce code
               </ThemedText>
             </View>
+
+            <View style={styles.settingContainer}>
+              <View style={styles.labelWithIcon}>
+                <IconSymbol
+                  name="info.circle.fill"
+                  size={16}
+                  color={buttonBackground}
+                />
+                <ThemedText style={styles.inputLabel}>
+                  Choisir une langue
+                </ThemedText>
+              </View>
+              <View style={styles.languageButtonsContainer}>
+                {languages.map((lang) => (
+                  <TouchableOpacity
+                    key={lang.code}
+                    style={[
+                      styles.languageButton,
+                      selectedLanguage === lang.code
+                        ? {
+                            backgroundColor: buttonBackground,
+                            shadowColor: buttonBackground,
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.5,
+                            shadowRadius: 4,
+                            elevation: 4,
+                          }
+                        : { backgroundColor: inputBackground },
+                    ]}
+                    onPress={() => setSelectedLanguage(lang.code)}
+                  >
+                    <ThemedText
+                      style={[
+                        styles.languageButtonText,
+                        selectedLanguage === lang.code ? { color: "#fff" } : {},
+                      ]}
+                    >
+                      {lang.label}
+                    </ThemedText>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
+            <View style={styles.settingContainer}>
+              <View style={styles.labelWithIcon}>
+                <IconSymbol
+                  name="info.circle.fill"
+                  size={16}
+                  color={buttonBackground}
+                />
+                <ThemedText style={styles.inputLabel}>
+                  Mots à remplir (catégories)
+                </ThemedText>
+              </View>
+              <View style={styles.categoriesList}>
+                {categories.map((cat, idx) => (
+                  <View key={idx} style={styles.categoryItem}>
+                    <ThemedText style={styles.categoryText}>{cat}</ThemedText>
+                    <TouchableOpacity
+                      onPress={() =>
+                        setCategories(categories.filter((_, i) => i !== idx))
+                      }
+                      style={styles.deleteCategoryButton}
+                    >
+                      <IconSymbol name="xmark" size={18} color="#c00" />
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+              <View style={styles.addCategoryRow}>
+                <TextInput
+                  style={[styles.input, { backgroundColor: inputBackground, flex: 1 }]}
+                  value={newCategory}
+                  onChangeText={setNewCategory}
+                  placeholder="Ajouter une catégorie"
+                  placeholderTextColor="#9BA1A6"
+                />
+                <TouchableOpacity
+                  style={[
+                    styles.addCategoryButton,
+                    { backgroundColor: buttonBackground },
+                  ]}
+                  onPress={() => {
+                    if (
+                      newCategory.trim() &&
+                      !categories.includes(newCategory.trim())
+                    ) {
+                      setCategories([...categories, newCategory.trim()]);
+                      setNewCategory("");
+                    }
+                  }}
+                >
+                  <IconSymbol name="plus" size={20} color="#fff" />
+                </TouchableOpacity>
+              </View>
+            </View>
           </ThemedView>
         </Animated.View>
 
-        {/* Create Button */}
         <Animated.View
           entering={FadeInUp.duration(800).delay(600)}
           style={[styles.buttonContainer, createButtonAnimatedStyle]}
@@ -492,7 +592,6 @@ export default function CreateSessionScreen() {
           </TouchableOpacity>
         </Animated.View>
 
-        {/* Additional info text */}
         <Animated.View entering={FadeInDown.delay(800).duration(600)}>
           <ThemedText style={styles.footerText}>
             Préparez-vous à un jeu sans papier ni crayon ! 🎮
@@ -719,5 +818,58 @@ const styles = StyleSheet.create({
     fontSize: 15,
     opacity: 0.7,
     fontStyle: "italic",
+  },
+  languageButtonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    gap: 10,
+    marginBottom: 10,
+  },
+  languageButton: {
+    flex: 1,
+    height: 40,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "rgba(150,150,150,0.2)",
+  },
+  languageButtonText: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  categoriesList: {
+    width: "100%",
+    marginBottom: 10,
+  },
+  categoryItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
+    paddingVertical: 8,
+  },
+  categoryText: {
+    fontSize: 15,
+    fontWeight: "500",
+  },
+  deleteCategoryButton: {
+    padding: 6,
+    borderRadius: 6,
+    backgroundColor: "rgba(255,255,255,0.1)",
+  },
+  addCategoryRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    gap: 10,
+  },
+  addCategoryButton: {
+    width: 46,
+    height: 46,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
