@@ -29,24 +29,19 @@ export default function TabLayout() {
   const buttonBackground = useThemeColor({}, "tint");
   const isDark = colorScheme === "dark";
 
-  // Animation simple
   const scale = useSharedValue(1);
 
   const handleCreatePress = () => {
-    // Feedback haptique
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
-    // Animation simple
     scale.value = withTiming(0.9, { duration: 100 });
     setTimeout(() => {
       scale.value = withTiming(1, { duration: 100 });
     }, 100);
 
-    // Navigation
     router.push("/(tabs)/create-session");
   };
 
-  // Style animé simple
   const buttonAnimatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{ scale: scale.value }],
@@ -109,7 +104,6 @@ export default function TabLayout() {
         />
       </Tabs>
 
-      {/* Bouton flottant simple */}
       <Animated.View
         entering={FadeIn.duration(300)}
         style={[

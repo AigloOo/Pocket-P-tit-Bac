@@ -24,6 +24,7 @@ import Animated, {
   withSequence,
   withDelay,
 } from "react-native-reanimated";
+import Slider from '@react-native-community/slider';
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -54,6 +55,8 @@ export default function CreateSessionScreen() {
     "Couleur",
   ]);
   const [newCategory, setNewCategory] = useState("");
+  const [timer, setTimer] = useState(60);
+  const [useDictionary, setUseDictionary] = useState(true);
 
   const backButtonScale = useSharedValue(1);
   const createButtonScale = useSharedValue(1);
@@ -514,6 +517,11 @@ export default function CreateSessionScreen() {
                 </ThemedText>
               </View>
               <View style={styles.categoriesList}>
+                {categories.length === 0 && (
+                  <ThemedText style={{ opacity: 0.6, fontStyle: "italic" }}>
+                    Aucune catégorie pour l’instant.
+                  </ThemedText>
+                )}
                 {categories.map((cat, idx) => (
                   <View key={idx} style={styles.categoryItem}>
                     <ThemedText style={styles.categoryText}>{cat}</ThemedText>
@@ -535,6 +543,16 @@ export default function CreateSessionScreen() {
                   onChangeText={setNewCategory}
                   placeholder="Ajouter une catégorie"
                   placeholderTextColor="#9BA1A6"
+                  onSubmitEditing={() => {
+                    if (
+                      newCategory.trim() &&
+                      !categories.includes(newCategory.trim())
+                    ) {
+                      setCategories([...categories, newCategory.trim()]);
+                      setNewCategory("");
+                    }
+                  }}
+                  returnKeyType="done"
                 />
                 <TouchableOpacity
                   style={[
@@ -550,13 +568,84 @@ export default function CreateSessionScreen() {
                       setNewCategory("");
                     }
                   }}
+                  disabled={!newCategory.trim() || categories.includes(newCategory.trim())}
                 >
                   <IconSymbol name="plus" size={20} color="#fff" />
                 </TouchableOpacity>
               </View>
             </View>
+            <View style={styles.settingContainer}>
+              <View style={styles.labelWithIcon}>
+                <IconSymbol name="info.circle.fill" size={16} color={buttonBackground} />
+                <ThemedText style={styles.inputLabel}>
+                  Temps acordé apres que un joueur ait termier (en secondes)
+                </ThemedText>
+              </View>
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+                <Slider
+                  style={{ flex: 1 }}
+                  minimumValue={30}
+                  maximumValue={300}
+                  step={10}
+                  value={timer}
+                  onValueChange={setTimer}
+                  minimumTrackTintColor={buttonBackground}
+                  maximumTrackTintColor="#ccc"
+                />
+                <ThemedText style={{ width: 40, textAlign: "right" }}>{timer}s</ThemedText>
+              </View>
+            </View>
+
+            <View style={styles.settingContainer}>
+              <View style={styles.labelWithIcon}>
+                <IconSymbol name="info.circle.fill" size={16} color={buttonBackground} />
+                <ThemedText style={styles.inputLabel}>
+                  Validation des mots
+                </ThemedText>
+              </View>
+              <View style={{ flexDirection: "row", gap: 10 }}>
+                <TouchableOpacity
+                  style={[
+                    styles.languageButton,
+                    useDictionary
+                      ? { backgroundColor: buttonBackground }
+                      : { backgroundColor: inputBackground },
+                  ]}
+                  onPress={() => setUseDictionary(true)}
+                >
+                  <ThemedText
+                    style={[
+                      styles.languageButtonText,
+                      useDictionary ? { color: "#fff" } : {},
+                    ]}
+                  >
+                    Dictionnaire
+                  </ThemedText>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.languageButton,
+                    !useDictionary
+                      ? { backgroundColor: buttonBackground }
+                      : { backgroundColor: inputBackground },
+                  ]}
+                  onPress={() => setUseDictionary(false)}
+                >
+                  <ThemedText
+                    style={[
+                      styles.languageButtonText,
+                      !useDictionary ? { color: "#fff" } : {},
+                    ]}
+                  >
+                    Libre
+                  </ThemedText>
+                </TouchableOpacity>
+              </View>
+            </View>
           </ThemedView>
         </Animated.View>
+
+        
 
         <Animated.View
           entering={FadeInUp.duration(800).delay(600)}
@@ -593,9 +682,7 @@ export default function CreateSessionScreen() {
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(800).duration(600)}>
-          <ThemedText style={styles.footerText}>
-            Préparez-vous à un jeu sans papier ni crayon ! 🎮
-          </ThemedText>
+
         </Animated.View>
       </Animated.ScrollView>
     </ThemedView>
@@ -709,6 +796,7 @@ const styles = StyleSheet.create({
   settingContainer: {
     width: "100%",
     marginBottom: 4,
+    marginTop: 10, 
   },
   passwordContainer: {
     width: "100%",
@@ -780,7 +868,7 @@ const styles = StyleSheet.create({
   },
   gameCodeText: {
     fontSize: 24,
-    fontWeight: "600",
+    fontWeight: 600,
     letterSpacing: 1,
   },
   refreshButton: {
@@ -812,13 +900,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     letterSpacing: 0.3,
   },
-  footerText: {
-    textAlign: "center",
-    marginTop: 24,
-    fontSize: 15,
-    opacity: 0.7,
-    fontStyle: "italic",
-  },
+
   languageButtonsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
